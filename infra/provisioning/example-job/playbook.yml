@@ -1,0 +1,15 @@
+# TODO:
+# We may not need a playbook for each job.
+# It might be sufficient to have a `jobs` directory that gets
+# templated to the mount location that gets shared with all clients.
+---
+- name: provision jobs
+  hosts: data_server
+  tasks:
+    - name: copy exec services
+      become: yes
+      copy:
+        src: exec-services.hcl
+        dest: /var/data/jobs/exec-services.hcl
+        owner: nomad
+        group: nomad

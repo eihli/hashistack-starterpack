@@ -1,0 +1,15 @@
+#-*-HCL-*-
+server {
+  enabled = true
+  bootstrap_expect = {{ bootstrap_expect }}
+
+  server_join {
+    retry_join = [
+      {% for host in groups['servers'] %}
+      "{{hostvars[host]['ansible_eth1']['ipv4']['address']}}",
+      {% endfor %}
+    ]
+    retry_max = 3
+    retry_interval = "15s"
+  }
+}

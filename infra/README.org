@@ -1,0 +1,112 @@
+#+TITLE: HashiStack StarterPack
+
+* Overview
+
+Supply a realworld scalable infrastructure in the HashiCorp stack serving [[https://github.com/gothinkster/realworld][RealWorld example apps]].
+
+** The HashiStack
+
+- [[https://www.hashicorp.com/products/terraform][Terraform]] - infrastructure provisioning
+- [[https://www.packer.io/][Packer]] - machine image build automation
+- [[https://www.vagrantup.com/][Vagrant]] - virtual environment management
+- [[https://www.hashicorp.com/products/consul][Consul]] - service networking
+- [[https://www.hashicorp.com/products/vault][Vault]] - secrets management
+- [[https://www.hashicorp.com/products/nomad][Nomad]] - workload orchestrator
+
+Here's some quick links to the important config files.
+
+- [[file:provisioning/roles/consul-server/templates/server.hcl.j2][Consul server hcl]]
+- [[file:provisioning/roles/consul-client/templates/client.hcl.j2][Consul client hcl]]
+- [[file:provisioning/roles/nomad-common/tasks/common.hcl.j2][Nomad common hcl]]
+- [[file:provisioning/roles/nomad-server/templates/server.hcl.j2][Nomad server hcl]]
+- [[file:provisioning/roles/nomad-client/templates/client.hcl.j2][Nomad client hcl]]
+- [[file:provisioning/example-job/files/exec-services.hcl][Sample job with upstream proxy and downstream service]]
+
+* Requirements
+
+- packer
+- nomad
+- consul
+- envoy
+- java
+- docker
+- ansible-galaxy install geerlingguy.nfs
+- CNI plugins so nomad can configure network namespace for consul connect sidecar proxy
+
+* Getting Started
+
+** Change ~dev.ini~!
+
+There's a quirkiness with ~ansible.posix.synchronize~ such that if you don't use the full path to the remote's private_key then Ansible doesn't find it or won't use it or something and ends up asking you for a password.
+
+Just update these lines in ~dev.ini~ to point to the path of this repo on your filesystem.
+
+~192.168.121.100 ansible_ssh_private_key_file=/home/eihli/code/hashistack-starterpack/.vagrant/machines/server-0/virtualbox/private_key~
+
+** Packer and Vagrant
+
+Our Packerfile starts from ~generic/ubuntu2004~ and then runs the code in ~bootstrap.sh~ to provision a fresh box that all of our agents use.
+
+~bootstrap.sh~ installs Consul, Nomad, Envoy, Docker, Java, configures some networking stuff, creates directories, and sets some permissions.
+
+There will be some slight differences between our server/client agents, but those differences will come about as part of some Ansible provisioning.
+
+#+BEGIN_SRC sh
+packer build example-image.pkr.hcl
+vagrant box add --name example output-example/package.box
+vagrant up
+ansible --ssh-extra-args='-oStrictHostKeyChecking=accept-new' -i dev.ini -m ping all
+ansible-playbook -i dev.ini provisioning/data-server.yml
+ansible-playbook -i dev.ini provisioning/consul-server.yml
+ansible-playbook -i dev.ini provisioning/consul-client.yml
+ansible-playbook -i dev.ini provisioning/nomad-server.yml
+ansible-playbook -i dev.ini provisioning/nomad-client.yml
+ansible-playbook -i dev.ini provisioning/example-job/playbook.yml
+ssh -L 4646:localhost:4646 -L 8500:localhost:8500 -i .vagrant/machines/server-0/virtualbox/private_key vagrant@192.168.121.100
+nomad job run /var/data/jobs/exec-services.hcl
+#+END_SRC
+
+Our Vagrantfile spins up:
+
+- 3 servers that are accessible over SSH ports 2200-2202 with private ip addresses 192.168.121.10{0..3}.
+- 3 clients accessible over SSH 2210-2202 with ip addresses 192.168.121.11{0..3}.
+
+The first server is also treated as a "data server" for jobs that require persistence. We share a network folder from that server to all other server. This is useful for rsyncing over docker images to a single host and loading them on clients as-needed rather than rsyncing them to every client in the case that it's needed.
+
+** Provisioning with Ansible
+
+~dev.ini~ is our Ansible inventory file.
+
+Accept host keys so Ansible doesn't ask in the future.
+
+~ansible --ssh-extra-args='-oStrictHostKeyChecking=accept-new' -i dev.ini -m ping all~
+
+* ansible.posix.synchronize
+
+\* Full path to ~private_key~ is necessary. Without it, the synchronize module will ask for a password.
+
+\* Note: This may be an outdated comment. TODO: Confirm.
+
+* Stateful Workloads
+
+https://learn.hashicorp.com/tutorials/nomad/stateful-workloads?in=nomad/stateful-workloads
+
+Even though it may make more sense to used managed DB solutions, like Amazon RDS, this repo provides a self-hosted alternative using stateful workloads with Nomad.
+
+* Building, deploying and releasing services
+
+The infrastructure looks for artifacts.
+
+To make available to the hashistack infrastructure a new service or a new version of a service, simply make sure that the infrastructure has access to the artifact.
+
+** Artifacts service
+
+Since jobs can be executed on any client, then each client needs access to artifacts.
+
+The artifacts service runs on every client and provides access to an NFS mount.
+
+To publish new artifacts, copy files to the NFS mount.
+
+* SSH Keys
+
+You'll need to configure SSH keys. TODO: Automate.

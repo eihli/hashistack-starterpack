@@ -1,0 +1,6 @@
+[submodule "node-express-realworld-example-app"]
+	path = node-express-realworld-example-app
+	url = git@github.com:eihli/node-express-realworld-example-app.git
+[submodule "svelte-realworld"]
+	path = svelte-realworld
+	url = https://github.com/eihli/svelte-realworld

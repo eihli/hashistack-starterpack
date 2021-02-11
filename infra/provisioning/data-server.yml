@@ -1,0 +1,15 @@
+---
+- name: data server
+  hosts: data_server
+  vars:
+    nfs_exports: []
+    realworld_express_api_build_id: ba04b70c31af81ca7935096740a6e083563b3a4a
+  pre_tasks:
+    - name: set list of exports
+      set_fact:
+        nfs_exports: "{{ nfs_exports }} + [ '/var/data {{ item }}(rw,sync,no_root_squash)' ]"
+      with_items: "{{ groups['clients'] + groups['servers'] }}"
+  roles:
+    - role: geerlingguy.nfs
+      become: true
+    - role: data

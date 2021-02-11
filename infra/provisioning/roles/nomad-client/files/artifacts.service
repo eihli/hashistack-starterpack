@@ -1,0 +1,17 @@
+[Unit]
+Description=Serve Nomad Artifacts
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/root
+ExecStart=python3 -m http.server -b localhost -d /mnt/data/artifacts 9090
+Restart=on-failure
+
+# The install section is needed to use
+# `systemctl enable` to start on boot
+# For a user service that you want to enable
+# and start automatically, use `default.target`
+# For system level services, use `multi-user.target`
+[Install]
+WantedBy=multi-user.target

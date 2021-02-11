@@ -1,0 +1,6 @@
+---
+- name: nomad server
+  hosts: servers
+  roles:
+    - nomad-common
+    - nomad-server

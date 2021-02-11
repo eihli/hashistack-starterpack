@@ -1,0 +1,9 @@
+---
+- name: nomad client
+  hosts: clients
+  pre_tasks:
+  roles:
+    - role: geerlingguy.nfs
+      become: true
+    - nomad-common
+    - nomad-client

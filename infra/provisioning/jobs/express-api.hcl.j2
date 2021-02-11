@@ -1,0 +1,44 @@
+job "realworld-express-api-job" {
+  datacenters = ["dc1"]
+  type = "service"
+  group "realworld-express-api-group" {
+    network {
+      port "http" { to = 8888}
+      mode = "bridge"
+    }
+
+    service {
+      name = "realworld-express-api-service"
+      port = "http"
+      connect {
+        sidecar_service {
+        }
+      }
+    }
+
+    # Create an individual task (unit of work). This particular
+    # task utilizes a Docker container to front a web application.
+    task "realworld-express-api-task" {
+      driver = "docker"
+
+      artifact {
+        source = "http://localhost:9090/realworld-express-api/{{ realworld_express_api_build_id }}.tar.gz"
+      }
+
+      # Configuration is specific to each driver.
+      config {
+        image = "node:latest"
+        ports = ["http"]
+        command = "node"
+        args = ["local/node-express-realworld-example-app/app.js"]
+      }
+
+      # Specify the maximum resources required to run the task,
+      # include CPU and memory.
+      resources {
+        cpu    = 128 # MHz
+        memory = 128 # MB
+      }
+    }
+  }
+}

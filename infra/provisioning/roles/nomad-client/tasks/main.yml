@@ -1,0 +1,61 @@
+- name: mount path exists
+  become: yes
+  file:
+    path: "/mnt/data"
+    state: directory
+
+- name: mount nfs
+  become: yes
+  ansible.posix.mount:
+    src: "{{ groups['data_server'][0] }}:/var/data"
+    path: "/mnt/data"
+    opts: rw,sync,hard,intr
+    state: mounted
+    fstype: nfs
+
+- name: add vagrant user to docker group
+  become: yes
+  user:
+    name: vagrant
+    groups: docker
+    append: yes
+
+- name: template client config
+  become: true
+  template:
+    src: "client.hcl.j2"
+    dest: "/etc/nomad.d/client.hcl"
+    owner: nomad
+    group: nomad
+  notify:
+    - restart clients
+
+- name: copy nomad-client.service
+  become: yes
+  copy:
+    src: "nomad-client.service"
+    dest: "/usr/lib/systemd/system/nomad-client.service"
+    owner: nomad
+    group: nomad
+
+- name: systemd start nomad service
+  become: yes
+  systemd:
+    state: started
+    enabled: yes
+    name: nomad-client
+
+- name: copy artifacts.service
+  become: yes
+  copy:
+    src: "artifacts.service"
+    dest: "/usr/lib/systemd/system/artifacts.service"
+
+- name: systemd start artifacts service
+  become: yes
+  systemd:
+    # daemon_reload: yes
+    # state: restarted
+    state: started
+    enabled: yes
+    name: artifacts

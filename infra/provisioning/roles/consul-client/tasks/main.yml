@@ -1,0 +1,22 @@
+- name: template consul client config
+  become: yes
+  notify:
+    - restart clients
+  template:
+    src: "client.hcl.j2"
+    dest: "/etc/consul.d/client.hcl"
+    owner: consul
+    group: consul
+
+- name: template consul-client.service
+  become: yes
+  template:
+    src: "consul-client.service.j2"
+    dest: "/usr/lib/systemd/system/consul-client.service"
+
+- name: service is started
+  become: yes
+  systemd:
+    state: started
+    enabled: yes
+    name: consul-client

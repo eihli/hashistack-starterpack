@@ -1,0 +1,22 @@
+- name: artifacts dir exists
+  become: yes
+  file:
+    path: "/var/data/artifacts"
+    state: directory
+
+- name: jobs dir exists
+  become: yes
+  file:
+    path: "/var/data/jobs"
+    state: directory
+    owner: nomad
+    group: nomad
+   
+- name: template jobs
+  become: yes
+  template:
+    src: "{{ item }}"
+    dest: "/var/data/jobs/{{ item | basename | regex_replace('\\.j2$', '') }}"
+    owner: nomad
+    group: nomad
+  loop: "{{ lookup('fileglob', '../../../jobs/*', wantlist=True) }}"

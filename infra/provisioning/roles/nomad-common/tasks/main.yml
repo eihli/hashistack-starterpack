@@ -1,0 +1,7 @@
+- name: template common config
+  become: yes
+  template:
+    src: "common.hcl.j2"
+    dest: "/etc/nomad.d/common.hcl"
+    owner: nomad
+    group: nomad

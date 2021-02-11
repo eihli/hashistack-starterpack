@@ -1,0 +1,23 @@
+- name: template server config
+  become: true
+  template:
+    owner: nomad
+    group: nomad
+    src: "server.hcl.j2"
+    dest: "/etc/nomad.d/server.hcl"
+  notify:
+    - restart servers
+
+- name: copy nomad-server.service
+  become: true
+  copy:
+    src: "nomad-server.service"
+    dest: "/usr/lib/systemd/system/nomad-server.service"
+
+- name: systemd start nomad-server service
+  become: true
+  systemd:
+    state: started
+    enabled: yes
+    name: nomad-server
+

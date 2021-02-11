@@ -1,0 +1,7 @@
+---
+# The vars here are duplicated from Terraform `vars.tf`.
+# TODO: Have a single source of truth for vars.
+- name: consul servers
+  hosts: servers
+  roles:
+    - consul-server

@@ -1,0 +1,20 @@
+#-*-HCL-*-
+client {
+  enabled = true
+
+  network_interface = "eth1"
+
+  server_join {
+    retry_join = [
+      {% for host in groups['servers'] %}
+      "{{ host }}",
+      {% endfor %}
+    ]
+    retry_max = 3
+    retry_interval = "15s"
+  }
+
+  meta {
+    connect.log_level = "debug"
+  }
+}

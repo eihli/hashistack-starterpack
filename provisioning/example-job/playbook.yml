@@ -1,0 +1,11 @@
+---
+- name: provision jobs
+  hosts: data_server
+  tasks:
+    - name: copy exec services
+      become: yes
+      copy:
+        src: exec-services.hcl
+        dest: /var/data/jobs/exec-services.hcl
+        owner: nomad
+        group: nomad

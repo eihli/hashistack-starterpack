@@ -1,0 +1,5 @@
+- name: restart servers
+  become: yes
+  service:
+    name: consul-server
+    state: restarted

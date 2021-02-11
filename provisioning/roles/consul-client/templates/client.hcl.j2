@@ -1,0 +1,21 @@
+#-*-HCL-*-
+datacenter = "{{ datacenter }}"
+data_dir = "/opt/consul"
+
+ports {
+  grpc = 8502
+}
+
+connect {
+  enabled = true
+}
+
+retry_join = [
+  {% for host in groups['servers'] %}
+  "{{ host }}",
+  {% endfor %}
+]
+
+bind_addr = {{ '"{{ GetInterfaceIP \\\"eth1\\\" }}"' }}
+
+advertise_addr = {{ '"{{ GetInterfaceIP \\\"eth1\\\" }}"' }}

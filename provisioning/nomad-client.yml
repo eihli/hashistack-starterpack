@@ -1,0 +1,7 @@
+---
+- name: nomad client
+  hosts: clients
+  pre_tasks:
+  roles:
+    - nomad-common
+    - nomad-client

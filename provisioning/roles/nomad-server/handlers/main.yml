@@ -1,0 +1,5 @@
+- name: restart servers
+  become: yes
+  service:
+    name: nomad-server
+    state: restarted

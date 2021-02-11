@@ -1,0 +1,16 @@
+#-*-HCL-*-
+log_level = "DEBUG"
+datacenter = "{{ datacenter }}"
+data_dir = "/opt/nomad"
+
+{% raw %}
+advertise {
+  http = "{{ GetInterfaceIP \"eth1\" }}"
+  rpc = "{{ GetInterfaceIP \"eth1\" }}"
+  serf = "{{ GetInterfaceIP \"eth1\" }}"
+}
+{% endraw %}
+
+consul {
+  address = "127.0.0.1:8500"
+}

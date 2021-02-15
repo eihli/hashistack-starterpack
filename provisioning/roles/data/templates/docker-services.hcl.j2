@@ -1,0 +1,76 @@
+#-*-HCL-*-
+job "docker-services" {
+  datacenters = ["dc1"]
+  group "upstream" {
+    network {
+      mode = "bridge"
+    }
+
+    service {
+      name = "docker-upstream-service"
+      connect {
+        sidecar_service {}
+      }
+    }
+
+    task "docker-upstream-service" {
+      driver = "docker"
+      config {
+        image = "eihli/pybuntu"
+        command = "socat"
+        args = [
+          "-v",
+          "TCP-LISTEN:8181,fork",
+          "EXEC:date"
+        ]
+      }
+    }
+  }
+
+  group "downstream" {
+    network {
+      mode = "bridge"
+      port "downstream" {
+        static = 9002
+        to = 9002
+      }
+    }
+
+    service {
+      name = "docker-downstream-service"
+      connect {
+        sidecar_service {
+          proxy {
+            upstreams {
+              destination_name = "docker-upstream-service"
+              local_bind_port = 9191
+            }
+          }
+        }
+      }
+    }
+
+    task "docker-downstream-service" {
+      driver = "docker"
+      template {
+        data = <<EOF
+#!/bin/sh
+while true
+do
+    socat - TCP:localhost:9191 >> /tmp/responses.txt
+    socat TCP-LISTEN:9002,reuseaddr EXEC:'/bin/cat /tmp/responses.txt'
+done
+EOF
+        destination = "local/server.sh"
+      }
+      config {
+        image = "eihli/pybuntu"
+        volumes = ["local/server.sh:/tmp/server.sh"]
+        command = "/bin/sh"
+        args = [
+          "/tmp/server.sh"
+        ]
+      }
+    }
+  }
+}

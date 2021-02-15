@@ -1,3 +1,18 @@
+- name: mount path exists
+  become: yes
+  file:
+    path: "/mnt/data"
+    state: directory
+
+- name: mount nfs
+  become: yes
+  ansible.posix.mount:
+    src: "{{ groups['data_server'][0] }}:/var/data"
+    path: "/mnt/data"
+    opts: rw,sync,hard,intr
+    state: mounted
+    fstype: nfs
+
 - name: add vagrant user to docker group
   become: yes
   user:

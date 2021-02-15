@@ -1,7 +1,7 @@
 job "exec-services" {
   datacenters = ["dc1"]
   type = "service"
-  group "group" {
+  group "upstream" {
     network {
       mode = "bridge"
     }
@@ -24,6 +24,12 @@ job "exec-services" {
           "echo \"starting upstream\"; while true; do printf 'HTTP/1.1 200 OK\nContent-Type: text/plain; charset=UTF-8\nServer: netcat\n\nHello, world.\n'  | nc -w 10 -p 8181 -l; sleep 1; done"
         ]
       }
+    }
+  }
+
+  group "downstream" {
+    network {
+      mode = "bridge"
     }
 
     service {

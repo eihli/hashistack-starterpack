@@ -15,12 +15,12 @@ Supply a realworld scalable infrastructure in the HashiCorp stack serving [[http
 
 Here's some quick links to the important config files.
 
-- [[file:provisioning/roles/consul-server/templates/server.hcl.j2][Consul server hcl]]
-- [[file:provisioning/roles/consul-client/templates/client.hcl.j2][Consul client hcl]]
-- [[file:provisioning/roles/nomad-common/tasks/common.hcl.j2][Nomad common hcl]]
-- [[file:provisioning/roles/nomad-server/templates/server.hcl.j2][Nomad server hcl]]
-- [[file:provisioning/roles/nomad-client/templates/client.hcl.j2][Nomad client hcl]]
-- [[file:provisioning/example-job/files/exec-services.hcl][Sample job with upstream proxy and downstream service]]
+- [[file:infra/provisioning/roles/consul-server/templates/server.hcl.j2][Consul server hcl]]
+- [[file:infra/provisioning/roles/consul-client/templates/client.hcl.j2][Consul client hcl]]
+- [[file:infra/provisioning/roles/nomad-common/tasks/common.hcl.j2][Nomad common hcl]]
+- [[file:infra/provisioning/roles/nomad-server/templates/server.hcl.j2][Nomad server hcl]]
+- [[file:infra/provisioning/roles/nomad-client/templates/client.hcl.j2][Nomad client hcl]]
+- [[file:infra/provisioning/example-job/files/exec-services.hcl][Sample job with upstream proxy and downstream service]]
 
 * Requirements
 

@@ -1,0 +1,6 @@
+#+TITLE: AWS Provisioning
+
+#+begin_src shell
+packer init .
+packer build .
+#+end_src

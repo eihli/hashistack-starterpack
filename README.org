@@ -81,6 +81,17 @@ Accept host keys so Ansible doesn't ask in the future.
 
 ~ansible --ssh-extra-args='-oStrictHostKeyChecking=accept-new' -i dev.ini -m ping all~
 
+
+* Deploying to AWS
+
+Install the [[https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html][AWS CLI]]
+
+Create a new [[https://console.aws.amazon.com/iam/home?#/security_credentials][Access Key]]
+
+Run ~aws configure~
+
+The configuration process stores your credentials in a file at ~\~/.aws/credentials~ on MacOS and Linux, or ~%UserProfile%\.aws\credentials~ on Windows.
+
 * ansible.posix.synchronize
 
 \* Full path to ~private_key~ is necessary. Without it, the synchronize module will ask for a password.

@@ -22,6 +22,9 @@ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
 sudo apt-get update
 sudo apt-get install -y docker-ce
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker
 
 # Java (for driver)
 sudo apt-get install -y openjdk-11-jdk
@@ -53,9 +56,13 @@ sudo mkdir --parents /opt/nomad
 sudo chown --recursive nomad:nomad /opt/nomad
 
 # Envoy
-curl -L https://getenvoy.io/cli | sudo bash -s -- -b /usr/local/bin
-getenvoy run standard:1.16.2 -- --version
-sudo cp ~/.getenvoy/builds/standard/1.16.2/linux_glibc/bin/envoy /usr/local/bin/
+# I couldn't find pre-built binaries, so I
+# am copying them out of the official docker image
+# that was built on Ubuntu.
+docker pull envoyproxy/envoy:v1.18.4
+docker run -d --name envoy envoyproxy/envoy:v1.18.4 /bin/bash
+sudo docker cp envoy:/usr/local/bin/envoy /usr/local/bin/envoy
+docker stop envoy && docker rm envoy
 
 # CNI plugins so Nomad can configure the network namespace for
 # Consul Connect sidecar proxy.

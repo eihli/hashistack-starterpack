@@ -21,7 +21,7 @@ variable "availability_zone" {
   default = "us-east-2a"
 }
 variable "server_ami" {
-  default = "ami-01e80d9e7b6daabcf"
+  default = "ami-002ff389bfa57247f"
 }
 variable "instance_count" {
   default = 3

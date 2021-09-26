@@ -22,6 +22,10 @@ Here's some quick links to the important config files.
 - [[file:infra/provisioning/roles/nomad-client/templates/client.hcl.j2][Nomad client hcl]]
 - [[file:infra/provisioning/example-job/files/exec-services.hcl][Sample job with upstream proxy and downstream service]]
 
+** TODO
+
+- Use a [[https://www.terraform.io/docs/language/settings/backends/index.html][remote state backend]] for Terraform state.
+
 * Requirements
 
 - packer

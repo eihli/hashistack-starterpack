@@ -4,3 +4,7 @@
 packer init .
 packer build .
 #+end_src
+
+#+begin_src shell
+ansible --user ubuntu --ssh-extra-args='-oStrictHostKeyChecking=accept-new' -i terraform.tfstate -m ping all
+#+end_src

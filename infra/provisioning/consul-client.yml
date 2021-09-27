@@ -1,5 +1,8 @@
 ---
 - name: consul client
   hosts: clients
+  vars:
+    datacenter: dc1
+    bootstrap_expect: 3
   roles:
     - consul-client

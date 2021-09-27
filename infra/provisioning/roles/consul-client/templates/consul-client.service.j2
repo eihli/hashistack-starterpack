@@ -9,7 +9,7 @@ ConditionFileNotEmpty=/etc/consul.d/client.hcl
 Type=fork
 User=root
 Group=root
-ExecStart=/usr/local/bin/consul agent -bind={{ "\'{{ GetInterfaceIP \"eth1\" }}\'" }} -data-dir=/opt/consul -config-file=/etc/consul.d/client.hcl
+ExecStart=/usr/local/bin/consul agent -bind="{{ bind_addr }}" -data-dir=/opt/consul -config-file=/etc/consul.d/client.hcl
 ExecReload=/bin/kill --signal HUP $MAINPID
 KillMode=process
 KillSignal=SIGTERM

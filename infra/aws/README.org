@@ -1,10 +1,28 @@
 #+TITLE: AWS Provisioning
 
+* Building
+
+Building happens on a ~t2.micro~ with the ~ubuntu/images/hvm-ssd/ubuntu-hirsute-21.04-amd64-server-20210908~ ami.
+
+The same ~bootstrap.sh~ script provisions for all infrastructure providers (AWS, DigitalOcean, Vagrant).
+
 #+begin_src shell
 packer init .
 packer build .
 #+end_src
 
+* Provisioning
+
+There's a simple hacked-together dynamic inventory plugin for Ansible at ~aws_tfstate.py~. You'll need an Ansible config that enables that plugin. A simple version of such an Ansible config is at ~aws/ansible.cfg~.
+
+The first time you try to SSH into any server, SSH will prompt you to verify the host key. A quick way to accept all new keys is to use the Ansible ~ping~ module with the ~StrickHostKeyChecking~ option of SSH set to ~accept-new~
+
 #+begin_src shell
 ansible --user ubuntu --ssh-extra-args='-oStrictHostKeyChecking=accept-new' -i terraform.tfstate -m ping all
+#+end_src
+
+Then, you can start provisioning with the Ansible playbooks.
+
+#+begin_src shell
+ANSIBLE_CONFIG=aws/ansible.cfg ansible-playbook --user ubuntu -i aws/terraform.tfstate provisioning/consul-server.yml
 #+end_src

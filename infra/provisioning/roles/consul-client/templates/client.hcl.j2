@@ -12,10 +12,10 @@ connect {
 
 retry_join = [
   {% for host in groups['servers'] %}
-  "{{ host }}",
+  "{{ bind_addr }}",
   {% endfor %}
 ]
 
-bind_addr = {{ '"{{ GetInterfaceIP \\\"eth1\\\" }}"' }}
+bind_addr = "{{ bind_addr }}"
 
-advertise_addr = {{ '"{{ GetInterfaceIP \\\"eth1\\\" }}"' }}
+advertise_addr ="{{ bind_addr }}"

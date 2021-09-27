@@ -1,0 +1,29 @@
+#+TITLE: Vagrant Provisioning
+
+* Building
+
+~packer build~ will place a ~package.box~ file in the ~output-example~ directory.
+
+The same ~bootstrap.sh~ script provisions for all infrastructure providers (AWS, DigitalOcean, Vagrant).
+
+#+begin_src shell
+packer init .
+packer build .
+#+end_src
+
+* Provisioning
+
+Since the Vagrant infrastructure isn't dynamic, we can use a static ~.ini~ file for inventory.
+
+The first time you try to SSH into any server, SSH will prompt you to verify the host key. A quick way to accept all new keys is to use the Ansible ~ping~ module with the ~StrickHostKeyChecking~ option of SSH set to ~accept-new~
+
+#+begin_src shell
+ansible --user ubuntu --ssh-extra-args='-oStrictHostKeyChecking=accept-new' -i terraform.tfstate -m ping all
+#+end_src
+
+Then, you can start provisioning with the Ansible playbooks.
+
+#+begin_src shell
+ansible-playbook --user vagrant -i dev.ini ../provisioning/consul-server.yml
+ansible-playbook --user vagrant -i dev.ini ../provisioning/consul-client.yml
+#+end_src

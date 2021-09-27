@@ -41,11 +41,11 @@ Here's some quick links to the important config files.
 
 ** Change ~dev.ini~!
 
-There's a quirkiness with ~ansible.posix.synchronize~ such that if you don't use the full path to the remote's private_key then Ansible doesn't find it or won't use it or something and ends up asking you for a password.
+In older versions of Ansible, there's a quirkiness with ~ansible.posix.synchronize~ such that if you don't use the full path to the remote's private_key then Ansible doesn't find it or won't use it or something and ends up asking you for a password.
 
 Just update these lines in ~dev.ini~ to point to the path of this repo on your filesystem.
 
-~192.168.121.100 ansible_ssh_private_key_file=/home/eihli/code/hashistack-starterpack/.vagrant/machines/server-0/virtualbox/private_key~
+~192.168.121.100 ansible_ssh_private_key_file=.vagrant/machines/server-0/virtualbox/private_key~
 
 ** Packer and Vagrant
 

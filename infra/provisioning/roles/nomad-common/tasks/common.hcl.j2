@@ -3,13 +3,11 @@ log_level = "DEBUG"
 datacenter = "{{ datacenter }}"
 data_dir = "/opt/nomad"
 
-{% raw %}
 advertise {
   http = "{{ bind_addr }}"
   rpc = "{{ bind_addr }}"
   serf = "{{ bind_addr }}"
 }
-{% endraw %}
 
 consul {
   address = "127.0.0.1:8500"

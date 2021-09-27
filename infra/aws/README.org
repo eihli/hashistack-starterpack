@@ -25,4 +25,9 @@ Then, you can start provisioning with the Ansible playbooks.
 
 #+begin_src shell
 ANSIBLE_CONFIG=aws/ansible.cfg ansible-playbook --user ubuntu -i aws/terraform.tfstate provisioning/consul-server.yml
+ANSIBLE_CONFIG=aws/ansible.cfg ansible-playbook --user ubuntu -i aws/terraform.tfstate provisioning/consul-client.yml
+ANSIBLE_CONFIG=aws/ansible.cfg ansible-playbook --user ubuntu -i aws/terraform.tfstate provisioning/data-server.yml
+ANSIBLE_CONFIG=aws/ansible.cfg ansible-playbook --user ubuntu -i aws/terraform.tfstate provisioning/nomad-server.yml
+ANSIBLE_CONFIG=aws/ansible.cfg ansible-playbook --user ubuntu -i aws/terraform.tfstate provisioning/nomad-client.yml
+ANSIBLE_CONFIG=aws/ansible.cfg ansible-playbook --user ubuntu -i aws/terraform.tfstate provisioning/nomad-stateful-client.yml
 #+end_src

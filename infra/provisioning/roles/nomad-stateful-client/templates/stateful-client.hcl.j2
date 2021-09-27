@@ -1,0 +1,17 @@
+client {
+  host_volume "mongodb-data" {
+    path = "/opt/mongodb/data"
+    read_only = false
+  }
+  meta {
+    "type" = "data"
+  }
+}
+
+plugin "docker" {
+  config {
+    volumes {
+      enabled = true
+    }
+  }
+}

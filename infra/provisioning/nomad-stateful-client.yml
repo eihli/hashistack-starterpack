@@ -1,0 +1,5 @@
+---
+- name: nomad stateful client
+  hosts: clients[0]
+  roles:
+    - role: nomad-stateful-client

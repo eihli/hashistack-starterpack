@@ -1,0 +1,21 @@
+# This role makes an assumption that the stateful client will
+# be a client chosen from the regular nomad client pool. (Specifically, the first in the host list.)
+# If you want to have a separate stateful client machine,
+# then you'll need to update this role to perform other operations
+# that the other nomad client role does, like copy over
+# a Systemd service unit file, etc...
+#
+# An even robuster solution might involve having separate stateful
+# clients for each stateful service you have. If you've got Redis,
+# MongoDB, PostgreSQL, etc... you might want separate machine[s] for each
+# which you might want to provision uniquely with their own role.
+---
+- name: template stateful client config
+  become: true
+  template:
+    src: "stateful-client.hcl.j2"
+    dest: "/etc/nomad.d/stateful-client.hcl"
+    owner: nomad
+    group: nomad
+  notify:
+    - restart clients

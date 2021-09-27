@@ -12,7 +12,7 @@ connect {
 
 retry_join = [
   {% for host in groups['servers'] %}
-  "{{ bind_addr }}",
+  "{{ hostvars[host]['bind_addr'] }}",
   {% endfor %}
 ]
 

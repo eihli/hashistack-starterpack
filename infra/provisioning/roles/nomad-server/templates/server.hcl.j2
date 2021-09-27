@@ -6,7 +6,7 @@ server {
   server_join {
     retry_join = [
       {% for host in groups['servers'] %}
-      "{{hostvars[host]['ansible_eth1']['ipv4']['address']}}",
+      "{{ bind_addr }}",
       {% endfor %}
     ]
     retry_max = 3

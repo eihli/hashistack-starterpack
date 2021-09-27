@@ -1,7 +1,9 @@
 ---
 - name: nomad client
   hosts: clients
-  pre_tasks:
+  vars:
+    datacenter: dc1
+    bootstrap_expect: 3
   roles:
     - role: geerlingguy.nfs
       become: true

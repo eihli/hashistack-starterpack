@@ -79,6 +79,49 @@ resource "aws_security_group" "allow_ssh" {
   }
 }
 
+resource "aws_security_group" "allow_nfs" {
+  name   = "allow_nfs"
+  vpc_id = aws_vpc.default_vpc.id
+
+  ingress {
+    from_port = 2049
+    to_port   = 2049
+    protocol  = "tcp"
+    cidr_blocks = [
+    "10.0.0.0/26"]
+  }
+
+  egress {
+    from_port = 2049
+    to_port   = 2049
+    protocol  = "tcp"
+    cidr_blocks = [
+    "10.0.0.0/26"]
+  }
+}
+
+resource "aws_security_group" "allow_rpcbind" {
+  name   = "allow_rpcbind"
+  vpc_id = aws_vpc.default_vpc.id
+
+  ingress {
+    from_port = 111
+    to_port   = 111
+    protocol  = "tcp"
+    cidr_blocks = [
+    "10.0.0.0/26"]
+  }
+
+  egress {
+    from_port = 111
+    to_port   = 111
+    protocol  = "tcp"
+    cidr_blocks = [
+    "10.0.0.0/26"]
+  }
+}
+
+
 resource "aws_instance" "servers" {
   count                       = var.instance_count
   ami                         = var.server_ami
@@ -87,7 +130,9 @@ resource "aws_instance" "servers" {
   subnet_id                   = aws_subnet.public.id
   associate_public_ip_address = "true"
   vpc_security_group_ids = [
-    "${aws_security_group.allow_ssh.id}"
+    "${aws_security_group.allow_ssh.id}",
+    "${aws_security_group.allow_nfs.id}",
+    "${aws_security_group.allow_rpcbind.id}"
   ]
   tags = {
     Name = "Hashicorp Server Node ${count.index}"
@@ -102,7 +147,8 @@ resource "aws_instance" "clients" {
   subnet_id                   = aws_subnet.public.id
   associate_public_ip_address = "true"
   vpc_security_group_ids = [
-    "${aws_security_group.allow_ssh.id}"
+    "${aws_security_group.allow_ssh.id}",
+    "${aws_security_group.allow_nfs.id}",
   ]
   tags = {
     Name = "Hashicorp Server Node ${count.index}"

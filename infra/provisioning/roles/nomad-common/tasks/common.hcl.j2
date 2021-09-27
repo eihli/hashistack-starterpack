@@ -5,9 +5,9 @@ data_dir = "/opt/nomad"
 
 {% raw %}
 advertise {
-  http = "{{ GetInterfaceIP \"eth1\" }}"
-  rpc = "{{ GetInterfaceIP \"eth1\" }}"
-  serf = "{{ GetInterfaceIP \"eth1\" }}"
+  http = "{{ bind_addr }}"
+  rpc = "{{ bind_addr }}"
+  serf = "{{ bind_addr }}"
 }
 {% endraw %}
 

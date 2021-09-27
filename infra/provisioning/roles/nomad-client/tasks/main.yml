@@ -4,12 +4,17 @@
     path: "/mnt/data"
     state: directory
 
+# We're mounting based on `bind_addr` here. Although a misnomer,
+# it will be the private IP address inside the VPC and is sufficient.
+#
+# There's a tcp option here to force NFS over TCP, but UDP might be faster.
+# Look into it and maybe create security group rules to allow NFS over UDP?
 - name: mount nfs
   become: yes
   ansible.posix.mount:
-    src: "{{ groups['data_server'][0] }}:/var/data"
+    src: "{{ hostvars[groups['servers'][0]]['bind_addr'] }}:/var/data"
     path: "/mnt/data"
-    opts: rw,sync,hard,intr
+    opts: tcp,rw,sync,hard,intr
     state: mounted
     fstype: nfs
 

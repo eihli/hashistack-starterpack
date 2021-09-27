@@ -1,6 +1,9 @@
 ---
 - name: nomad server
   hosts: servers
+  vars:
+    datacenter: dc1
+    bootstrap_expect: 3
   roles:
     - nomad-common
     - nomad-server

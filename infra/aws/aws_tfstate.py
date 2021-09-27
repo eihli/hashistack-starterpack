@@ -61,3 +61,13 @@ class InventoryModule(BaseInventoryPlugin):
                     instance['attributes']['public_ip'],
                     group=resource["name"]
                 )
+                self.inventory.set_variable(
+                    instance['attributes']['public_ip'],
+                    'public_ip',
+                    instance['attributes']['public_ip']
+                )
+                self.inventory.set_variable(
+                    instance['attributes']['public_ip'],
+                    'bind_addr',
+                    instance['attributes']['private_ip']
+                )

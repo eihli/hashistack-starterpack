@@ -79,7 +79,7 @@ resource "aws_security_group" "allow_ssh" {
   }
 }
 
-resource "aws_instance" "hashi_server" {
+resource "aws_instance" "servers" {
   count                       = var.instance_count
   ami                         = var.server_ami
   instance_type               = var.instance_type
@@ -94,9 +94,33 @@ resource "aws_instance" "hashi_server" {
   }
 }
 
+resource "aws_instance" "clients" {
+  count                       = var.instance_count
+  ami                         = var.server_ami
+  instance_type               = var.instance_type
+  key_name                    = "default"
+  subnet_id                   = aws_subnet.public.id
+  associate_public_ip_address = "true"
+  vpc_security_group_ids = [
+    "${aws_security_group.allow_ssh.id}"
+  ]
+  tags = {
+    Name = "Hashicorp Server Node ${count.index}"
+  }
+}
+
+
+
 output "ec2_server_ip" {
   value = {
-    for instance in aws_instance.hashi_server :
+    for instance in aws_instance.servers :
+    instance.id => "${instance.public_ip}"
+  }
+}
+
+output "ec2_client_ip" {
+  value = {
+    for instance in aws_instance.clients :
     instance.id => "${instance.public_ip}"
   }
 }

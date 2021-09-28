@@ -19,3 +19,17 @@
     group: nomad
   notify:
     - restart clients
+
+- name: mongodb data dir exists
+  become: true
+  file:
+    path: "/opt/mongodb/data"
+    state: directory
+    owner: ubuntu # TODO: mongo user?
+    group: ubuntu
+    mode: "0755"
+
+- name: mongodb initialized
+  script:
+    creates: /opt/mongodb/data/initialized
+    cmd: mongodb_init.sh

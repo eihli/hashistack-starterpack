@@ -20,3 +20,4 @@
     owner: nomad
     group: nomad
   loop: "{{ lookup('fileglob', '../../../jobs/*', wantlist=True) }}"
+

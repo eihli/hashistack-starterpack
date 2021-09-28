@@ -88,49 +88,56 @@ resource "aws_security_group" "consul_agents" {
       to_port   = 8600
       protocol  = "tcp"
       cidr_blocks = [
-      "10.0.0.0/26"]
+        "10.0.0.0/26"
+      ]
   }
   ingress {
       from_port = 8600
       to_port   = 8600
       protocol  = "udp"
       cidr_blocks = [
-      "10.0.0.0/26"]
+        "10.0.0.0/26"
+      ]
   }
   ingress {
       from_port = 8500
       to_port   = 8500
       protocol  = "tcp"
       cidr_blocks = [
-      "10.0.0.0/26"]
+        "10.0.0.0/26"
+      ]
   }
   ingress {
       from_port = 8301
       to_port   = 8301
       protocol  = "tcp"
       cidr_blocks = [
-      "10.0.0.0/26"]
+        "10.0.0.0/26"
+      ]
   }
   ingress {
       from_port = 8301
       to_port   = 8301
       protocol  = "udp"
       cidr_blocks = [
-      "10.0.0.0/26"]
+        "10.0.0.0/26"
+      ]
   }
   ingress {
       from_port = 8300
       to_port   = 8300
       protocol  = "tcp"
       cidr_blocks = [
-      "10.0.0.0/26"]
+        "10.0.0.0/26"
+      ]
   }
   ingress {
       from_port = 21000
       to_port   = 21255
       protocol  = "tcp"
       cidr_blocks = [
-      "10.0.0.0/26"]
+        "10.0.0.0/26"
+      ]
   }
 
 
@@ -139,56 +146,64 @@ resource "aws_security_group" "consul_agents" {
     to_port   = 0
     protocol  = "-1"
     cidr_blocks = [
-    "0.0.0.0/0"]
+      "0.0.0.0/0"
+    ]
   }
   egress {
       from_port = 8600
       to_port   = 8600
       protocol  = "tcp"
       cidr_blocks = [
-      "10.0.0.0/26"]
+        "10.0.0.0/26"
+      ]
   }
   egress {
       from_port = 8600
       to_port   = 8600
       protocol  = "udp"
       cidr_blocks = [
-      "10.0.0.0/26"]
+        "10.0.0.0/26"
+      ]
   }
   egress {
       from_port = 8500
       to_port   = 8500
       protocol  = "tcp"
       cidr_blocks = [
-      "10.0.0.0/26"]
+        "10.0.0.0/26"
+      ]
   }
   egress {
       from_port = 8301
       to_port   = 8301
       protocol  = "tcp"
       cidr_blocks = [
-      "10.0.0.0/26"]
+        "10.0.0.0/26"
+      ]
   }
   egress {
       from_port = 8301
       to_port   = 8301
       protocol  = "udp"
       cidr_blocks = [
-      "10.0.0.0/26"]
+        "10.0.0.0/26"
+      ]
   }
   egress {
       from_port = 8300
       to_port   = 8300
       protocol  = "tcp"
       cidr_blocks = [
-      "10.0.0.0/26"]
+        "10.0.0.0/26"
+      ]
   }
   egress {
       from_port = 21000
       to_port   = 21255
       protocol  = "tcp"
       cidr_blocks = [
-      "10.0.0.0/26"]
+        "10.0.0.0/26"
+      ]
   }
 }
 
@@ -201,14 +216,16 @@ resource "aws_security_group" "nomad_agents" {
       to_port   = 4648
       protocol  = "tcp"
       cidr_blocks = [
-      "10.0.0.0/26"]
+        "10.0.0.0/26"
+      ]
   }
   ingress {
       from_port = 4648
       to_port   = 4648
       protocol  = "udp"
       cidr_blocks = [
-      "10.0.0.0/26"]
+        "10.0.0.0/26"
+      ]
   }
 
   egress {
@@ -216,21 +233,24 @@ resource "aws_security_group" "nomad_agents" {
     to_port   = 0
     protocol  = "-1"
     cidr_blocks = [
-    "0.0.0.0/0"]
+      "0.0.0.0/0"
+    ]
   }
   egress {
       from_port = 4646
       to_port   = 4648
       protocol  = "tcp"
       cidr_blocks = [
-      "10.0.0.0/26"]
+        "0.0.0.0/0"
+      ]
   }
   egress {
       from_port = 4648
       to_port   = 4648
       protocol  = "udp"
       cidr_blocks = [
-      "10.0.0.0/26"]
+        "10.0.0.0/26"
+      ]
   }
 }
 

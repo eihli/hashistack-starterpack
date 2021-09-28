@@ -1,1 +1,37 @@
-FROM mongo
+job "mongodb" {
+  datacenters = ["dc1"]
+  type = "service"
+  group "mongodb-group" {
+    network {
+      port "mongod" { to = 27017}
+      mode = "bridge"
+    }
+
+    service {
+      name = "mongodb-service"
+      port = "mongod"
+      connect {
+        sidecar_service {}
+      }
+    }
+
+    # Create an individual task (unit of work). This particular
+    # task utilizes a Docker container to front a MongoDB server.
+    task "mongodb-task" {
+      driver = "docker"
+
+      # Configuration is specific to each driver.
+      config {
+        image = "mongo:latest"
+        ports = ["mongod"]
+      }
+
+      # Specify the maximum resources required to run the task,
+      # include CPU and memory.
+      resources {
+        cpu    = 256 # MHz
+        memory = 256 # MB
+      }
+    }
+  }
+}

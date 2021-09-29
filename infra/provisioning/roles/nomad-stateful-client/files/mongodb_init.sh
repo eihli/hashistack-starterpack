@@ -16,6 +16,11 @@ sudo docker run \
     -e MONGO_DATA=$MONGO_DATA \
     -v $MONGO_DATA:/data/db \
     -p 127.0.0.1:5432:5432 \
+    -d \
     mongo
+
+sleep 1
+
+sudo docker stop mongodb
 
 touch /opt/mongodb/data/initialized

@@ -12,6 +12,12 @@ job "realworld-express-api-job" {
       port = "http"
       connect {
         sidecar_service {
+          proxy {
+            upstreams {
+              destination_name = "mongodb-service"
+              local_bind_port = 27017
+            }
+          }
         }
       }
     }

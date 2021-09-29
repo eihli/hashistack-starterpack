@@ -57,17 +57,44 @@ class InventoryModule(BaseInventoryPlugin):
                 resource["name"]
             )
             for instance in resource["instances"]:
-                self.inventory.add_host(
-                    instance['attributes']['public_ip'],
-                    group=resource["name"]
-                )
-                self.inventory.set_variable(
-                    instance['attributes']['public_ip'],
-                    'public_ip',
-                    instance['attributes']['public_ip']
-                )
-                self.inventory.set_variable(
-                    instance['attributes']['public_ip'],
-                    'bind_addr',
-                    instance['attributes']['private_ip']
-                )
+                # TODO: Robustify this.
+                # This only works for a specific setup.
+                # It requires some Ansible config so that Ansible
+                # can deploy using a jump box.
+                # https://stackoverflow.com/questions/27661414/ssh-to-remote-server-using-ansible
+
+                # For hosts with public IP.
+                if instance['attributes'].get('public_ip'):
+                    self.inventory.add_host(
+                        instance['attributes']['public_ip'],
+                        group=resource["name"]
+                    )
+                    self.inventory.set_variable(
+                        instance['attributes']['public_ip'],
+                        'public_ip',
+                        instance['attributes']['public_ip']
+                    )
+                    self.inventory.set_variable(
+                        instance['attributes']['public_ip'],
+                        'bind_addr',
+                        instance['attributes']['private_ip']
+                    )
+
+                # For hosts on private subnet behind bastion.
+                elif instance['attributes'].get('private_ip'):
+                    self.inventory.add_host(
+                        instance['attributes']['private_ip'],
+                        group=resource["name"]
+                    )
+                    self.inventory.set_variable(
+                        instance['attributes']['private_ip'],
+                        'private_ip',
+                        instance['attributes']['private_ip']
+                    )
+                    self.inventory.set_variable(
+                        instance['attributes']['private_ip'],
+                        'bind_addr',
+                        instance['attributes']['private_ip']
+                    )
+                else:
+                    raise Exception('Host has no IP.')
